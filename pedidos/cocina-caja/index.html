@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Comanda · Ali Doner Kebab</title>
+
+<!-- ===== PWA: para poder "Añadir a pantalla de inicio" en móvil/tablet
+     y que se abra a pantalla completa, sin la barra del navegador ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e30613">
+<!-- iOS / Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ali Doner">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192-any.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:opsz,wght@9..40,400..800&family=Noto+Naskh+Arabic:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Firebase (sincronización entre dispositivos) -->
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== LOGIN: código de sesión ===== -->
+  <div id="login-view" hidden>
+    <div class="login-wrap">
+      <div class="login-brand">
+        <div class="mark">A</div>
+        <h1>Ali Doner Kebab</h1>
+      </div>
+      <p class="login-sub" id="login-sub">Introduce el código de tu sesión.</p>
+      <form id="login-form" class="login-form" autocomplete="off">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4"
+               id="session-input" class="session-input" placeholder="····" autocomplete="off">
+        <button type="submit" class="session-submit" id="session-submit">Entrar</button>
+      </form>
+      <p class="login-error" id="login-error" hidden>Código incorrecto.</p>
+    </div>
+  </div>
+
+  <!-- ===== HOME: 16 mesas ===== -->
+  <div id="home-view" hidden>
+    <div class="topbar" style="position:static;border:none;padding:0;background:none;margin-bottom:0;">
+      <div class="brand">
+        <div class="mark">A</div>
+        <div>
+          <h1>Ali Doner Kebab</h1>
+          <small id="tagline">Comanda de sala</small>
+        </div>
+      </div>
+      <span class="sync-badge off" id="sync-badge">🔶 Modo local</span>
+      <button class="session-chip" id="connect-drawer-btn" hidden>🗄️ Conectar caja</button>
+      <button class="fs-btn" id="fs-btn-home" hidden>⛶ <span class="fs-label">Pantalla completa</span></button>
+      <button class="session-chip" id="change-session-btn" hidden>
+        <span id="session-chip-label">Sesión</span> <b id="current-session-label">----</b> · <span id="change-session-label">Cambiar</span>
+      </button>
+      <div class="role-switch">
+        <button class="role-btn" data-role="cocina">🍳 <span id="role-label-cocina">Cocina</span></button>
+        <button class="role-btn active" data-role="comanda">📋 <span id="role-label-comanda">Comanda</span></button>
+        <button class="role-btn" data-role="caja">🧾 <span>Caja</span></button>
+      </div>
+      <div class="lang-switch" id="lang-switch">
+        <button class="lang-btn active" data-lang="es"><span class="flag flag-es"></span>ES</button>
+        <button class="lang-btn" data-lang="en"><span class="flag flag-en"></span>EN</button>
+        <button class="lang-btn" data-lang="ur"><span class="flag flag-pk"></span>اردو</button>
+      </div>
+    </div>
+
+    <div class="home-head">
+      <div>
+        <div class="eyebrow" id="home-eyebrow">Plano de sala</div>
+        <h2 id="home-heading">Toca una mesa para abrir la comanda</h2>
+      </div>
+      <div class="legend">
+        <span><i class="free"></i><span id="legend-free">Libre</span></span>
+        <span><i class="busy"></i><span id="legend-busy">Con pedido</span></span>
+        
+      </div>
+    </div>
+
+    <div class="floor-wrap">
+      <div class="floor" id="floor"></div>
+    </div>
+
+    <div class="floor-toolbar">
+      <div class="status-key">
+        <div><span class="sw" style="background:#5b5044;border:1px solid rgba(246,239,225,.25)"></span><b id="key-free">Libre</b></div>
+        <div><span class="sw" style="background:var(--stamp)"></span><b id="key-busy">Ocupada</b></div>
+      </div>
+      <div class="toolbar-btns">
+        <button class="tb-btn" id="btn-saldo">Saldo sala</button>
+        <button class="tb-btn" id="btn-historial">📖 Historial</button>
+        <button class="tb-btn ghost" id="btn-salon">Salón</button>
+        <button class="tb-btn ghost" id="btn-tickets">Tickets aparcados</button>
+        <button class="tb-btn ghost" id="btn-juntar">Juntar mesas</button>
+        <button class="tb-btn danger" id="btn-cerrar-dia">🔒 Cerrar día</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TABLE VIEW: carta + comanda ===== -->
+  <div id="table-view" hidden>
+    <div class="topbar table-topbar">
+      <button class="back-btn" id="back-btn">← Mesas</button>
+      <div class="table-title">
+        <div class="num" id="tv-num">1</div>
+        <h2 id="tv-label">Comanda</h2>
+      </div>
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Buscar plato, ingrediente…">
+      </div>
+      <button class="variable-btn" id="variable-btn">➕ <span id="variable-btn-label">Variable</span></button>
+      <div class="table-actions">
+        <button class="print-btn-top" id="print-btn" hidden>🖨️ Imprimir</button>
+        <button class="pay-btn" id="pay-btn">✓ Pagado</button>
+        <button class="park-btn-top" id="park-btn">📦 Aparcar</button>
+        <button class="clear-mesa-btn" id="clear-mesa-btn">Vaciar mesa</button>
+      </div>
+    </div>
+
+    <div class="table-body">
+      <nav class="cat-rail" id="cat-rail"></nav>
+      <main class="items-area" id="items-area"></main>
+      <aside class="ticket-panel" id="ticket-panel">
+        <div class="ticket-inner">
+          <div class="ticket-head">
+            <div class="mark" id="ticket-brand-mark">ALI DONER · COMANDA</div>
+            <div class="mesa-num" id="ticket-mesa-num">Mesa 1</div>
+            <div class="ts" id="ticket-ts"></div>
+          </div>
+          <div class="ticket-items" id="ticket-items"></div>
+          <div class="ticket-foot">
+            <div class="ticket-total">
+              <span class="lbl" id="ticket-total-label">Total</span>
+              <span class="val" id="ticket-total">0.00 €</span>
+            </div>
+            <div class="ticket-count" id="ticket-count">0 artículos</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ===== KITCHEN / PIZZA: cola de platos por preparar ===== -->
+  <div id="kitchen-view" hidden>
+    <div class="topbar kitchen-topbar">
+      <div class="brand">
+        <div class="mark" id="kitchen-mark">🍳</div>
+        <div>
+          <h1 id="kitchen-title">Cocina</h1>
+          <small id="kitchen-tagline">Pedidos pendientes</small>
+        </div>
+      </div>
+      <button class="fs-btn" id="fs-btn-kitchen">⛶ <span class="fs-label">Pantalla completa</span></button>
+      <div class="role-switch">
+        <button class="role-btn" data-role="cocina">🍳 <span>Cocina</span></button>
+        <button class="role-btn" data-role="comanda">📋 <span>Comanda</span></button>
+        <button class="role-btn" data-role="caja">🧾 <span>Caja</span></button>
+      </div>
+    </div>
+    <div class="kitchen-body" id="kitchen-body"></div>
+  </div>
+
+  <button class="mobile-ticket-toggle" id="mobile-ticket-toggle" hidden>
+    🧾 <span id="mobile-ticket-label">Ver comanda</span> <span id="mobile-ticket-badge"></span>
+  </button>
+
+</div>
+
+
+
+
+<div id="inbox" class="inbox" aria-live="polite"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="js/config.js"></script>
+<script src="js/carta.js"></script>
+<script src="js/app.js"></script>
+<script src="js/teclado.js"></script>
+<script src="js/cajon.js"></script>
+<script src="js/avisos.js"></script>
+</body>
+</html>
