@@ -1,4 +1,4 @@
-/* Lógica de la web · Ali Doner Kebab (no hace falta tocar nada aquí) */
+/* Lógica de la web · Food Truck (no hace falta tocar nada aquí) */
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
@@ -110,8 +110,8 @@ renderCarta();
   const card = document.getElementById("mapcard");
   if(USE_GOOGLE_MAP_EMBED){
     const f = document.createElement("iframe");
-    f.src = "https://maps.google.com/maps?q=Ali+Doner+Kebab,+Carrer+de+C%C3%B2rsega+629,+08025+Barcelona&z=16&output=embed";
-    f.title = "Mapa de Ali Doner Kebab"; f.loading = "lazy";
+    f.src = "https://maps.google.com/maps?q=Carrer+de+C%C3%B2rsega+629,+08025+Barcelona&z=16&output=embed";
+    f.title = "Mapa de Food Truck"; f.loading = "lazy";
     card.appendChild(f);
     document.getElementById("tagmap").hidden = true;
     return;
@@ -147,7 +147,7 @@ renderCarta();
       <path d="M0 6 C-16 -12 -20 -22 -20 -32 a20 20 0 0 1 40 0 c0 10 -4 20 -20 38z" fill="#ff4a3d" stroke="#fff3e2" stroke-width="3"/>
       <circle cy="-32" r="8" fill="#fff3e2"/>
       <rect x="-66" y="16" width="132" height="30" rx="15" fill="#fff3e2"/>
-      <text y="36" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="800" font-size="14" fill="#1a120e">Ali Doner Kebab</text>
+      <text y="36" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="800" font-size="14" fill="#1a120e">Food Truck</text>
     </g>`;
 })();
 
@@ -177,7 +177,7 @@ function paintReviews(rating, count, reviews){
 }
 async function loadReviews(){
   try{
-    const cached = JSON.parse(localStorage.getItem("ali_reviews") || "null");
+    const cached = JSON.parse(localStorage.getItem("ft_reviews") || "null");
     if(cached && Date.now() - cached.t < 12 * 3600 * 1000){ paintReviews(cached.rating, cached.count, cached.reviews); return; }
   }catch(e){}
   try{
@@ -191,7 +191,7 @@ async function loadReviews(){
                 uri: r.authorAttribution && r.authorAttribution.uri }
     }));
     paintReviews(place.rating, place.userRatingCount, reviews);
-    try{ localStorage.setItem("ali_reviews", JSON.stringify({ t: Date.now(), rating: place.rating, count: place.userRatingCount, reviews })); }catch(e){}
+    try{ localStorage.setItem("ft_reviews", JSON.stringify({ t: Date.now(), rating: place.rating, count: place.userRatingCount, reviews })); }catch(e){}
   }catch(e){ /* sin clave o sin cuota: se queda la nota fija y los botones */ }
 }
 if(GOOGLE_API_KEY){

@@ -1,5 +1,5 @@
 /* =====================================================================
-   CARTA DE LA WEB · Ali Doner Kebab
+   CARTA DE LA WEB · Food Truck
    [nombre, precio, descripción, etiqueta opcional]
    ===================================================================== */
 const M3 = "Pollo · Ternera · Mixto";

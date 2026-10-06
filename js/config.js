@@ -1,5 +1,5 @@
 /* =====================================================================
-   CONFIGURACIÓN DE LA WEB · Ali Doner Kebab
+   CONFIGURACIÓN DE LA WEB · Food Truck
    Todo lo que se suele cambiar está aquí. Los platos y precios están en js/carta.js
    ===================================================================== */
 
@@ -17,5 +17,5 @@ const USE_GOOGLE_MAP_EMBED = true;
    3. Pon un límite de unas 30 peticiones al día para no pasar de las 1.000 gratis al mes.
    4. Pega la clave aquí. Sin clave, la web enseña la nota y los botones, sin las tarjetas. */
 const GOOGLE_API_KEY = "";
-const PLACE_ID = "ChIJ700T7dqipBIRBsOpaom4KTE";   // ficha de Ali Doner Kebab en Google Maps
+const PLACE_ID = "ChIJ700T7dqipBIRBsOpaom4KTE";   // ficha del local en Google Maps
 const MIN_STARS = 4;   // solo enseña reseñas de 4 y 5 estrellas (pon 1 para enseñarlas todas)

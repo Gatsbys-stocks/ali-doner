@@ -1,7 +1,8 @@
-# Ali Doner Kebab · Web y apps
+# Food Truck · Web y apps
 
 Dos partes: la web y el sistema de pedidos (tablet en cada mesa + cocina y caja).
 Cada carpeta final se sube tal cual a un hosting estático (GitHub Pages, Netlify…) y funciona sola.
+Cada carpeta lleva un archivo vacío `.nojekyll`: súbelo también, para que GitHub Pages publique los archivos tal cual sin intentar procesarlos con Jekyll.
 
 ```
 web/                     Página web del local (clientes en internet)
@@ -23,8 +24,8 @@ Las imágenes están en `img/` y los iconos de la app (`icon-*.png`, `manifest.j
 ## Cómo se conectan
 
 1. El cliente pide en la **tablet de mesa** (`pedidos/mesa/`).
-2. Los platos se añaden a la comanda de esa mesa en Firebase (`alidoner/sessions/sala/orders/<mesa>`).
-3. **Cocina y Caja** (`pedidos/cocina-caja/`) los ve al momento y muestra un aviso con sonido (`alidoner/sessions/sala/inbox`).
+2. Los platos se añaden a la comanda de esa mesa en Firebase (`foodtruck/sessions/sala/orders/<mesa>`).
+3. **Cocina y Caja** (`pedidos/cocina-caja/`) los ve al momento y muestra un aviso con sonido (`foodtruck/sessions/sala/inbox`).
 4. Los botones "Llamar al camarero" y "Pedir la cuenta" también llegan como aviso.
 
 Las dos apps tienen que usar **el mismo Firebase**: `pedidos/mesa/js/config.js` y `pedidos/cocina-caja/js/config.js`.
